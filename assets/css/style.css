@@ -1,0 +1,146 @@
+/* ============================================================
+   Bahay Pag-asa — Main Stylesheet
+   ============================================================ */
+
+:root {
+    --green-dark:  #1a6b3a;
+    --green-mid:   #28a745;
+    --green-light: #d4edda;
+    --sidebar-w:   260px;
+    --topbar-h:    58px;
+}
+
+/* ---- Reset / Base ----------------------------------------- */
+body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f4f6f9; color: #333; }
+
+/* ---- Topbar ----------------------------------------------- */
+.topbar {
+    background: linear-gradient(90deg, var(--green-dark), #0d4a2a);
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1030;
+    height: var(--topbar-h);
+}
+
+/* ---- Sidebar ---------------------------------------------- */
+.sidebar {
+    background: linear-gradient(180deg, #1e2a35 0%, #16202a 100%);
+    width: var(--sidebar-w);
+    min-height: calc(100vh - var(--topbar-h));
+    position: fixed;
+    top: var(--topbar-h);
+    left: 0;
+    overflow-y: auto;
+    transition: transform .25s ease;
+    z-index: 1020;
+}
+
+.sidebar.collapsed { transform: translateX(calc(-1 * var(--sidebar-w))); }
+
+.sidebar-header { border-bottom: 1px solid rgba(255,255,255,.08); }
+
+.sidebar .nav-link {
+    color: rgba(255,255,255,.7);
+    border-radius: 8px;
+    padding: .55rem .85rem;
+    font-size: .875rem;
+    transition: background .15s, color .15s;
+}
+
+.sidebar .nav-link:hover,
+.sidebar .nav-link.active {
+    background: rgba(40,167,69,.25);
+    color: #fff;
+}
+
+.sidebar .nav-link.active {
+    background: var(--green-mid);
+    color: #fff;
+    font-weight: 600;
+}
+
+.nav-section-title {
+    color: rgba(255,255,255,.35);
+    font-size: .7rem;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    padding: .8rem .85rem .3rem;
+}
+
+/* ---- Main Content ----------------------------------------- */
+.wrapper { padding-top: var(--topbar-h); }
+
+.main-content {
+    margin-left: var(--sidebar-w);
+    padding: 1.5rem;
+    min-height: calc(100vh - var(--topbar-h));
+    transition: margin-left .25s ease;
+}
+
+.main-content.expanded { margin-left: 0; }
+
+/* ---- Page Header ------------------------------------------ */
+.page-header {
+    background: #fff;
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 8px rgba(0,0,0,.06);
+}
+
+.page-header h4 { margin: 0; font-weight: 700; color: var(--green-dark); }
+.page-header .breadcrumb { margin: 0; font-size: .82rem; }
+
+/* ---- Stat Cards ------------------------------------------- */
+.stat-card {
+    border: none;
+    border-radius: 14px;
+    box-shadow: 0 4px 16px rgba(0,0,0,.08);
+    transition: transform .2s;
+    overflow: hidden;
+}
+
+.stat-card:hover { transform: translateY(-3px); }
+
+.stat-card .icon-box {
+    width: 56px; height: 56px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.6rem;
+}
+
+/* ---- Cards ------------------------------------------------ */
+.card { border: none; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,.06); }
+.card-header {
+    background: linear-gradient(90deg, var(--green-dark), var(--green-mid));
+    color: #fff; font-weight: 600; border-radius: 12px 12px 0 0 !important;
+}
+
+/* ---- Tables ----------------------------------------------- */
+.table th { font-size: .8rem; text-transform: uppercase; letter-spacing: .5px; color: #666; }
+.dataTables_wrapper .dataTables_filter input { border-radius: 20px; }
+
+/* ---- Badges / Status -------------------------------------- */
+.badge-active   { background: var(--green-light); color: var(--green-dark); }
+.badge-inactive { background: #ffeeba; color: #856404; }
+.badge-closed   { background: #f8d7da; color: #721c24; }
+
+/* ---- Forms ------------------------------------------------ */
+.form-control:focus, .form-select:focus {
+    border-color: var(--green-mid);
+    box-shadow: 0 0 0 .2rem rgba(40,167,69,.2);
+}
+
+.btn-primary   { background: var(--green-mid); border-color: var(--green-mid); }
+.btn-primary:hover { background: var(--green-dark); border-color: var(--green-dark); }
+
+/* ---- Flash Alert ------------------------------------------ */
+.flash-container { position: fixed; top: calc(var(--topbar-h) + 10px); right: 16px; z-index: 2000; min-width: 300px; }
+
+/* ---- Responsive ------------------------------------------- */
+@media (max-width: 768px) {
+    .sidebar { transform: translateX(calc(-1 * var(--sidebar-w))); }
+    .sidebar.show { transform: translateX(0); }
+    .main-content { margin-left: 0; }
+}
