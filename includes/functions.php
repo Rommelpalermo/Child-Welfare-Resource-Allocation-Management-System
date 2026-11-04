@@ -4,9 +4,11 @@
 // ============================================================
 if (!defined('BASE_URL')) { define('BASE_URL', ''); }
 
-// Force sessions to use strict mode
-ini_set('session.use_strict_mode', 1);
-ini_set('session.cookie_httponly', 1);
+// Apply session settings before any page starts the session.
+if (session_status() === PHP_SESSION_NONE) {
+    ini_set('session.use_strict_mode', '1');
+    ini_set('session.cookie_httponly', '1');
+}
 
 require_once __DIR__ . '/../config/database.php';
 
