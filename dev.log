@@ -1,0 +1,19 @@
+
+> child-welfare-resource-allocation-management-system@1.0.0 dev
+> next dev
+
+▲ Next.js 16.4.5 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.0.147:3000
+- Environments: .env.local
+✓ Ready in 568ms
+✓ Running next.config.mjs took 31ms
+
+✓ Generated AGENTS.md for AI agents. Set `agentRules: false` in next.config to disable.
+ GET /admin/dashboard 307 in 360ms (next.js: 204ms, application-code: 156ms)
+ GET / 200 in 82ms (next.js: 24ms, application-code: 58ms)
+ GET /admin/children 307 in 566ms (next.js: 512ms, application-code: 54ms)
+ GET / 200 in 34ms (next.js: 1.8ms, application-code: 32ms)
+ GET /admin/reports 307 in 61ms (next.js: 10ms, application-code: 51ms)
+ GET / 200 in 37ms (next.js: 2ms, application-code: 35ms)
+  Reload env: .env.local
