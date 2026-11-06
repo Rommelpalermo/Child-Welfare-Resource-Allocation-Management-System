@@ -15,6 +15,8 @@ const links = [
   { href: '/admin/donation-monitoring', icon: 'graph-up', label: 'Donation Monitoring' },
   { section: 'REPORTS' },
   { href: '/admin/reports', icon: 'file-earmark-bar-graph', label: 'Generate Reports' },
+  { section: 'SECURITY' },
+  { href: '/admin/audit-trail', icon: 'journal-text', label: 'Audit Trail' },
 ];
 
 export default async function AdminLayout({ children }) {

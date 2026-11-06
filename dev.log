@@ -17,3 +17,5 @@
  GET /admin/reports 307 in 61ms (next.js: 10ms, application-code: 51ms)
  GET / 200 in 37ms (next.js: 2ms, application-code: 35ms)
   Reload env: .env.local
+✓ Compiled in 86ms
+✓ Compiled in 13ms

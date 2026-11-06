@@ -20,7 +20,10 @@ export async function login(prev, formData) {
     .maybeSingle();
 
   const ok = user && user.status === 'active' && (await bcrypt.compare(password, user.password));
-  if (!ok) return { error: 'Invalid credentials or account is inactive.', username };
+  if (!ok) {
+    await logActivity(null, `Failed login attempt for username "${username.slice(0, 50)}"`, 'Auth');
+    return { error: 'Invalid credentials or account is inactive.', username };
+  }
 
   await createSession(user);
   await logActivity(user, 'User logged in', 'Auth');
@@ -28,6 +31,8 @@ export async function login(prev, formData) {
 }
 
 export async function logout() {
+  const user = await getSession();
+  if (user) await logActivity(user, 'User logged out', 'Auth');
   await destroySession();
   redirect('/');
 }
