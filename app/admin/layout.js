@@ -12,7 +12,7 @@ const links = [
   { href: '/admin/resources', icon: 'box-seam', label: 'Resource & Inventory' },
   { href: '/admin/partners', icon: 'building', label: 'Partner Information' },
   { href: '/admin/donations', icon: 'gift', label: 'Donation Management' },
-  { href: '/admin/donation-monitoring', icon: 'graph-up', label: 'Donation Monitoring' },
+  { href: '/admin/donation-monitoring', icon: 'graph-up', label: 'Distribution' },
   { section: 'REPORTS' },
   { href: '/admin/reports', icon: 'file-earmark-bar-graph', label: 'Generate Reports' },
   { section: 'SECURITY' },

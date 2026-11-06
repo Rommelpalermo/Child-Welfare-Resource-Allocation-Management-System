@@ -26,7 +26,7 @@ $records = $db->query("
     ORDER BY dm.distribution_date DESC
 ")->fetch_all(MYSQLI_ASSOC);
 
-$pageTitle = 'Donation Monitoring';
+$pageTitle = 'Distribution';
 include '../../includes/header.php';
 ?>
 <?php include '../../includes/sidebar.php'; ?>
@@ -35,10 +35,10 @@ include '../../includes/header.php';
     <?php include '../../includes/flash.php'; ?>
     <div class="page-header">
         <div>
-            <h4><i class="bi bi-graph-up me-2 text-success"></i>Donation Monitoring</h4>
+            <h4><i class="bi bi-graph-up me-2 text-success"></i>Distribution</h4>
             <nav aria-label="breadcrumb"><ol class="breadcrumb mb-0">
                 <li class="breadcrumb-item"><a href="../dashboard.php">Dashboard</a></li>
-                <li class="breadcrumb-item active">Donation Monitoring</li>
+                <li class="breadcrumb-item active">Distribution</li>
             </ol></nav>
         </div>
         <a href="add.php" class="btn btn-success"><i class="bi bi-plus-lg me-1"></i>Record Distribution</a>

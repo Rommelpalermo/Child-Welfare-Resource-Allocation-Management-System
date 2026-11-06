@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $donor_type  = (isset($_POST['donor_type']) ? $_POST['donor_type'] : 'Individual');
     $partner_id  = (int)((isset($_POST['partner_id']) ? $_POST['partner_id'] : 0)) ?: null;
     $don_type    = (isset($_POST['donation_type']) ? $_POST['donation_type'] : 'Cash');
-    $amount      = (float)((isset($_POST['amount']) ? $_POST['amount'] : 0));
+    $amount      = $don_type === 'Cash' ? (float)((isset($_POST['amount']) ? $_POST['amount'] : 0)) : 0;
     $items_desc  = trim((isset($_POST['items_desc']) ? $_POST['items_desc'] : ''));
     $don_date    = (isset($_POST['donation_date']) ? $_POST['donation_date'] : '');
     $received_by = (int)(isset($_POST['received_by']) ? $_POST['received_by'] : $_SESSION['user_id']);
@@ -80,12 +80,12 @@ include '../../includes/header.php';
                             <?php endforeach; ?>
                         </select></div>
                     <div class="col-md-3"><label class="form-label">Donation Type</label>
-                        <select name="donation_type" class="form-select">
+                        <select name="donation_type" id="donationType" class="form-select">
                             <?php foreach(['Cash','In-Kind','Food','Clothing','Medical','Other'] as $t): ?>
-                            <option value="<?= $t ?>"><?= $t ?></option>
+                            <option value="<?= $t ?>" <?= ((isset($_POST['donation_type']) ? $_POST['donation_type'] : 'Cash'))===$t?'selected':'' ?>><?= $t ?></option>
                             <?php endforeach; ?>
                         </select></div>
-                    <div class="col-md-3"><label class="form-label">Amount (₱)</label>
+                    <div class="col-md-3" id="amountGroup"><label class="form-label">Amount (₱)</label>
                         <input type="number" name="amount" class="form-control" step="0.01" min="0" value="<?= e((isset($_POST['amount']) ? $_POST['amount'] : '0')) ?>"></div>
                     <div class="col-md-3"><label class="form-label">Date <span class="text-danger">*</span></label>
                         <input type="date" name="donation_date" class="form-control" value="<?= e(isset($_POST['donation_date']) ? $_POST['donation_date'] : date('Y-m-d')) ?>" required></div>
@@ -117,5 +117,17 @@ include '../../includes/header.php';
     </div>
 </div>
 
+<script>
+(function () {
+    var type = document.getElementById('donationType'), group = document.getElementById('amountGroup');
+    function toggle() {
+        var cash = type.value === 'Cash';
+        group.style.display = cash ? '' : 'none';
+        group.querySelector('input').disabled = !cash;
+    }
+    type.addEventListener('change', toggle);
+    toggle();
+})();
+</script>
 <?php include '../../includes/sidebar_close.php'; ?>
 <?php include '../../includes/footer.php'; ?>

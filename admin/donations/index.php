@@ -55,13 +55,15 @@ include '../../includes/header.php';
                         <td><?= $i+1 ?></td>
                         <td class="fw-semibold"><?= e($d['donor_name']) ?></td>
                         <td><?= e($d['donation_type']) ?></td>
-                        <td>₱<?= number_format($d['amount'],2) ?></td>
+                        <td><?= $d['donation_type']==='Cash' ? '₱'.number_format($d['amount'],2) : '—' ?></td>
                         <td><?= e(truncate((isset($d['items_desc']) ? $d['items_desc'] : '—'))) ?></td>
                         <td><?= fmtDate($d['donation_date']) ?></td>
                         <td><?= e((isset($d['receiver']) ? $d['receiver'] : '—')) ?></td>
                         <td><span class="badge bg-<?= $d['status']==='Received'?'success':($d['status']==='Pending'?'warning':'info') ?>">
                             <?= e($d['status']) ?></span></td>
                         <td class="text-nowrap">
+                            <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#donationModal"
+                                data-details="<?= donationDetailsJson($d) ?>" title="View details"><i class="bi bi-eye"></i></button>
                             <a href="edit.php?id=<?= $d['id'] ?>" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
                             <a href="?delete=<?= $d['id'] ?>" class="btn btn-sm btn-outline-danger"
                                data-confirm="Delete this donation record?"><i class="bi bi-trash"></i></a>
@@ -77,3 +79,5 @@ include '../../includes/header.php';
 
 <?php include '../../includes/sidebar_close.php'; ?>
 <?php include '../../includes/footer.php'; ?>
+<?php include '../../includes/donation_modal.php'; ?>
+<?php include '../../includes/donation_modal.php'; ?>

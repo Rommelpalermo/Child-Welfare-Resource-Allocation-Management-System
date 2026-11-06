@@ -48,7 +48,7 @@ include '../../includes/header.php';
             <h4><i class="bi bi-graph-up me-2 text-success"></i>Record Distribution</h4>
             <nav aria-label="breadcrumb"><ol class="breadcrumb mb-0">
                 <li class="breadcrumb-item"><a href="../dashboard.php">Dashboard</a></li>
-                <li class="breadcrumb-item"><a href="index.php">Donation Monitoring</a></li>
+                <li class="breadcrumb-item"><a href="index.php">Distribution</a></li>
                 <li class="breadcrumb-item active">Add</li>
             </ol></nav>
         </div>

@@ -40,7 +40,7 @@ include '../../includes/header.php';
             <div class="table-responsive">
                 <table class="table datatable table-hover">
                     <thead><tr>
-                        <th>#</th><th>Donor</th><th>Type</th><th>Amount</th><th>Items</th><th>Date</th><th>Status</th>
+                        <th>#</th><th>Donor</th><th>Type</th><th>Amount</th><th>Items</th><th>Date</th><th>Status</th><th>Actions</th>
                     </tr></thead>
                     <tbody>
                     <?php foreach ($donations as $i => $d): ?>
@@ -48,11 +48,13 @@ include '../../includes/header.php';
                         <td><?= $i+1 ?></td>
                         <td class="fw-semibold"><?= e($d['donor_name']) ?></td>
                         <td><?= e($d['donation_type']) ?></td>
-                        <td>₱<?= number_format($d['amount'],2) ?></td>
+                        <td><?= $d['donation_type']==='Cash' ? '₱'.number_format($d['amount'],2) : '—' ?></td>
                         <td><?= e(truncate((isset($d['items_desc']) ? $d['items_desc'] : '—'))) ?></td>
                         <td><?= fmtDate($d['donation_date']) ?></td>
                         <td><span class="badge bg-<?= $d['status']==='Received'?'success':($d['status']==='Pending'?'warning':'info') ?>">
                             <?= e($d['status']) ?></span></td>
+                        <td><button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#donationModal"
+                            data-details="<?= donationDetailsJson($d) ?>" title="View details"><i class="bi bi-eye"></i></button></td>
                     </tr>
                     <?php endforeach; ?>
                     </tbody>
@@ -64,3 +66,4 @@ include '../../includes/header.php';
 
 <?php include '../../includes/sidebar_close.php'; ?>
 <?php include '../../includes/footer.php'; ?>
+<?php include '../../includes/donation_modal.php'; ?>

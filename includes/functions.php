@@ -41,3 +41,22 @@ function getFlash() {
     }
     return null;
 }
+
+        function donationDetailsJson(array $d) {
+            $rows = [
+                'Donor' => $d['donor_name'],
+                'Donor Type' => !empty($d['donor_type']) ? $d['donor_type'] : '—',
+                'Partner / Org' => !empty($d['partner_name']) ? $d['partner_name'] : '—',
+                'Donation Type' => $d['donation_type'],
+            ];
+            if ($d['donation_type'] === 'Cash') $rows['Amount'] = '₱' . number_format($d['amount'], 2);
+            $rows += [
+                'Items Description' => !empty($d['items_desc']) ? $d['items_desc'] : '—',
+                'Date' => fmtDate($d['donation_date']),
+                'Received By' => !empty($d['receiver']) ? $d['receiver'] : '—',
+                'Status' => $d['status'],
+                'Acknowledgement No.' => !empty($d['acknowledgement_no']) ? $d['acknowledgement_no'] : '—',
+                'Notes' => !empty($d['notes']) ? $d['notes'] : '—',
+            ];
+            return htmlspecialchars(json_encode($rows, JSON_UNESCAPED_UNICODE), ENT_QUOTES, 'UTF-8');
+        }

@@ -61,7 +61,7 @@ function navLink($href, $icon, $label, $currentFile, $checkFile) {
                 <?= navLink($base . '/donations/index.php', 'gift', 'Donation Management', $currentFile, 'index.php') ?>
             </li>
             <li class="nav-item">
-                <?= navLink($base . '/donation-monitoring/index.php', 'graph-up', 'Donation Monitoring', $currentFile, 'index.php') ?>
+                <?= navLink($base . '/donation-monitoring/index.php', 'graph-up', 'Distribution', $currentFile, 'index.php') ?>
             </li>
             <li class="nav-section-title">REPORTS</li>
             <li class="nav-item">
