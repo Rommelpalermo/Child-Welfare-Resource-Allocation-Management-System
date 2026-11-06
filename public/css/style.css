@@ -144,3 +144,11 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f4f6f9; colo
     .sidebar.show { transform: translateX(0); }
     .main-content { margin-left: 0; }
 }
+
+/* ---- Print ------------------------------------------------ */
+@media print {
+    .topbar, .sidebar { display: none !important; }
+    .wrapper { padding-top: 0 !important; }
+    .main-content { margin-left: 0 !important; padding: 0 !important; }
+    body { background: #fff !important; }
+}
