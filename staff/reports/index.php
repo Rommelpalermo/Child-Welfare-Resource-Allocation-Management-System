@@ -21,12 +21,12 @@ switch ($report_type) {
         $title = 'Child Records Report';
         $data  = $db->query("SELECT case_number, CONCAT(first_name,' ',last_name) full_name,
             gender, case_type, case_status, admission_date
-            FROM children ORDER BY case_status, last_name")->fetch_all(MYSQLI_ASSOC);
+            FROM children WHERE is_archived=0 ORDER BY case_status, last_name")->fetch_all(MYSQLI_ASSOC);
         break;
     case 'donations':
         $title = 'My Donations Report';
         $data  = $db->query("SELECT donor_name, donation_type, amount, donation_date, status
-            FROM donations WHERE received_by=$uid
+            FROM donations WHERE is_archived=0 AND received_by=$uid
             AND donation_date BETWEEN '$date_from' AND '$date_to'
             ORDER BY donation_date DESC")->fetch_all(MYSQLI_ASSOC);
         break;

@@ -10,10 +10,26 @@ $db = getDB();
 
 // Staff can only view their own received donations
 $uid = (int)$_SESSION['user_id'];
+if (isset($_GET['archive']) && is_numeric($_GET['archive'])) {
+    $id = (int)$_GET['archive'];
+    $db->query("UPDATE donations SET is_archived=1 WHERE id=$id AND received_by=$uid");
+    setFlash('success', 'Donation record archived.');
+    logActivity("Archived donation ID $id", 'Donations');
+    header('Location: index.php'); exit;
+}
+if (isset($_GET['restore']) && is_numeric($_GET['restore'])) {
+    $id = (int)$_GET['restore'];
+    $db->query("UPDATE donations SET is_archived=0 WHERE id=$id AND received_by=$uid");
+    setFlash('success', 'Donation record restored.');
+    logActivity("Restored donation ID $id", 'Donations');
+    header('Location: index.php?view=archived'); exit;
+}
+$showArchived = (isset($_GET['view']) ? $_GET['view'] : '') === 'archived';
+$arch = $showArchived ? 1 : 0;
 $donations = $db->query("SELECT d.*, p.org_name partner_name
     FROM donations d
     LEFT JOIN partners p ON p.id=d.partner_id
-    WHERE d.received_by=$uid AND d.is_archived=0
+    WHERE d.received_by=$uid AND d.is_archived=$arch
     ORDER BY d.donation_date DESC")->fetch_all(MYSQLI_ASSOC);
 
 $pageTitle = 'My Donations';
@@ -34,8 +50,9 @@ include '../../includes/header.php';
         <a href="add.php" class="btn btn-success"><i class="bi bi-plus-lg me-1"></i>Record Donation</a>
     </div>
 
+    <?php include '../../includes/archive_toggle.php'; ?>
     <div class="card">
-        <div class="card-header"><i class="bi bi-gift me-2"></i>Donations I Received</div>
+        <div class="card-header"><i class="bi bi-gift me-2"></i><?= $showArchived ? 'Archived Donations' : 'Donations I Received' ?></div>
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table datatable table-hover">
@@ -54,7 +71,14 @@ include '../../includes/header.php';
                         <td><span class="badge bg-<?= $d['status']==='Received'?'success':($d['status']==='Pending'?'warning':'info') ?>">
                             <?= e($d['status']) ?></span></td>
                         <td><button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#donationModal"
-                            data-details="<?= donationDetailsJson($d) ?>" title="View details"><i class="bi bi-eye"></i></button></td>
+                            data-details="<?= donationDetailsJson($d) ?>" title="View details"><i class="bi bi-eye"></i></button>
+                            <?php if ($showArchived): ?>
+                            <a href="?restore=<?= $d['id'] ?>" class="btn btn-sm btn-outline-success" title="Restore"
+                               data-confirm="Restore this donation record?"><i class="bi bi-arrow-counterclockwise"></i></a>
+                            <?php else: ?>
+                            <a href="?archive=<?= $d['id'] ?>" class="btn btn-sm btn-outline-secondary" title="Archive"
+                               data-confirm="Archive this donation record?"><i class="bi bi-archive"></i></a>
+                            <?php endif; ?></td>
                     </tr>
                     <?php endforeach; ?>
                     </tbody>

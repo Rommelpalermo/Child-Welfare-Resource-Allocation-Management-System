@@ -9,8 +9,8 @@ requireRole('admin');
 $db = getDB();
 $errors = [];
 
-$donations = $db->query("SELECT id, donor_name, donation_date, donation_type FROM donations ORDER BY donation_date DESC")->fetch_all(MYSQLI_ASSOC);
-$children  = $db->query("SELECT id, first_name, last_name FROM children WHERE case_status='Active' ORDER BY first_name")->fetch_all(MYSQLI_ASSOC);
+$donations = $db->query("SELECT id, donor_name, donation_date, donation_type FROM donations WHERE is_archived=0 ORDER BY donation_date DESC")->fetch_all(MYSQLI_ASSOC);
+$children  = $db->query("SELECT id, first_name, last_name FROM children WHERE is_archived=0 AND case_status='Active' ORDER BY first_name")->fetch_all(MYSQLI_ASSOC);
 $users     = $db->query("SELECT id, full_name FROM users WHERE status='active' ORDER BY full_name")->fetch_all(MYSQLI_ASSOC);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

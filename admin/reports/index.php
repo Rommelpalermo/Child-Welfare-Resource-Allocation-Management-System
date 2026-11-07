@@ -21,20 +21,20 @@ switch ($report_type) {
         $title = 'Child Records Report';
         $data  = $db->query("SELECT c.case_number, CONCAT(c.first_name,' ',c.last_name) full_name,
             c.gender, c.case_type, c.case_status, c.admission_date, c.guardian_name
-            FROM children c ORDER BY c.case_status, c.last_name")->fetch_all(MYSQLI_ASSOC);
+            FROM children c WHERE c.is_archived=0 ORDER BY c.case_status, c.last_name")->fetch_all(MYSQLI_ASSOC);
         break;
     case 'donations':
         $title = 'Donations Report';
         $data  = $db->query("SELECT d.donor_name, d.donation_type, d.amount, d.donation_date, d.status,
             u.full_name receiver
             FROM donations d LEFT JOIN users u ON u.id=d.received_by
-            WHERE d.donation_date BETWEEN '$date_from' AND '$date_to'
+            WHERE d.is_archived=0 AND d.donation_date BETWEEN '$date_from' AND '$date_to'
             ORDER BY d.donation_date DESC")->fetch_all(MYSQLI_ASSOC);
         break;
     case 'resources':
         $title = 'Resource & Inventory Report';
         $data  = $db->query("SELECT item_name, category, quantity, unit, condition_status, location
-            FROM resources ORDER BY category, item_name")->fetch_all(MYSQLI_ASSOC);
+            FROM resources WHERE is_archived=0 ORDER BY category, item_name")->fetch_all(MYSQLI_ASSOC);
         break;
     case 'partners':
         $title = 'Partner Organizations Report';

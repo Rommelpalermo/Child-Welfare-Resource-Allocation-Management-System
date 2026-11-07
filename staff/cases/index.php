@@ -8,7 +8,7 @@ requireRole('staff');
 
 $db = getDB();
 
-$children = $db->query("SELECT * FROM children ORDER BY case_status, last_name")->fetch_all(MYSQLI_ASSOC);
+$children = $db->query("SELECT * FROM children WHERE is_archived=0 ORDER BY case_status, last_name")->fetch_all(MYSQLI_ASSOC);
 $pageTitle = 'Update Case Status';
 include '../../includes/header.php';
 ?>

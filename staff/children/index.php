@@ -7,7 +7,23 @@ require_once '../../includes/auth.php';
 requireRole('staff');
 
 $db = getDB();
-$children = $db->query("SELECT * FROM children WHERE is_archived=0 ORDER BY case_status, last_name")->fetch_all(MYSQLI_ASSOC);
+if (isset($_GET['archive']) && is_numeric($_GET['archive'])) {
+    $id = (int)$_GET['archive'];
+    $db->query("UPDATE children SET is_archived=1 WHERE id=$id");
+    setFlash('success', 'Child record archived.');
+    logActivity("Archived child ID $id", 'Children');
+    header('Location: index.php'); exit;
+}
+if (isset($_GET['restore']) && is_numeric($_GET['restore'])) {
+    $id = (int)$_GET['restore'];
+    $db->query("UPDATE children SET is_archived=0 WHERE id=$id");
+    setFlash('success', 'Child record restored.');
+    logActivity("Restored child ID $id", 'Children');
+    header('Location: index.php?view=archived'); exit;
+}
+$showArchived = (isset($_GET['view']) ? $_GET['view'] : '') === 'archived';
+$arch = $showArchived ? 1 : 0;
+$children = $db->query("SELECT * FROM children WHERE is_archived=$arch ORDER BY case_status, last_name")->fetch_all(MYSQLI_ASSOC);
 $pageTitle = 'View Child Records';
 include '../../includes/header.php';
 ?>
@@ -25,8 +41,9 @@ include '../../includes/header.php';
         </div>
     </div>
 
+    <?php include '../../includes/archive_toggle.php'; ?>
     <div class="card">
-        <div class="card-header"><i class="bi bi-person-heart me-2"></i>All Child Records</div>
+        <div class="card-header"><i class="bi bi-person-heart me-2"></i><?= $showArchived ? 'Archived' : 'All' ?> Child Records</div>
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table datatable table-hover">
@@ -46,8 +63,15 @@ include '../../includes/header.php';
                         <td><span class="badge bg-<?= $c['case_status']==='Active'?'success':($c['case_status']==='Closed'?'danger':'warning') ?>">
                             <?= e($c['case_status']) ?></span></td>
                         <td><?= e((isset($c['guardian_name']) ? $c['guardian_name'] : '—')) ?></td>
-                        <td>
+                        <td class="text-nowrap">
                             <a href="view.php?id=<?= $c['id'] ?>" class="btn btn-sm btn-outline-info"><i class="bi bi-eye"></i></a>
+                            <?php if ($showArchived): ?>
+                            <a href="?restore=<?= $c['id'] ?>" class="btn btn-sm btn-outline-success" title="Restore"
+                               data-confirm="Restore this child record?"><i class="bi bi-arrow-counterclockwise"></i></a>
+                            <?php else: ?>
+                            <a href="?archive=<?= $c['id'] ?>" class="btn btn-sm btn-outline-secondary" title="Archive"
+                               data-confirm="Archive this child record?"><i class="bi bi-archive"></i></a>
+                            <?php endif; ?>
                         </td>
                     </tr>
                     <?php endforeach; ?>

@@ -9,18 +9,18 @@ requireRole('admin');
 $db = getDB();
 
 // Summary counts
-$children   = $db->query("SELECT COUNT(*) c FROM children WHERE case_status='Active'")->fetch_assoc()['c'];
-$donations  = $db->query("SELECT COALESCE(SUM(amount),0) s FROM donations WHERE MONTH(donation_date)=MONTH(NOW()) AND YEAR(donation_date)=YEAR(NOW())")->fetch_assoc()['s'];
-$resources  = $db->query("SELECT COUNT(*) c FROM resources")->fetch_assoc()['c'];
+$children   = $db->query("SELECT COUNT(*) c FROM children WHERE is_archived=0 AND case_status='Active'")->fetch_assoc()['c'];
+$donations  = $db->query("SELECT COALESCE(SUM(amount),0) s FROM donations WHERE is_archived=0 AND MONTH(donation_date)=MONTH(NOW()) AND YEAR(donation_date)=YEAR(NOW())")->fetch_assoc()['s'];
+$resources  = $db->query("SELECT COUNT(*) c FROM resources WHERE is_archived=0")->fetch_assoc()['c'];
 $partners   = $db->query("SELECT COUNT(*) c FROM partners WHERE status='Active'")->fetch_assoc()['c'];
-$totalDonors = $db->query("SELECT COUNT(DISTINCT donor_name) c FROM donations")->fetch_assoc()['c'];
-$pendingDonations = $db->query("SELECT COUNT(*) c FROM donations WHERE status='Pending'")->fetch_assoc()['c'];
+$totalDonors = $db->query("SELECT COUNT(DISTINCT donor_name) c FROM donations WHERE is_archived=0")->fetch_assoc()['c'];
+$pendingDonations = $db->query("SELECT COUNT(*) c FROM donations WHERE is_archived=0 AND status='Pending'")->fetch_assoc()['c'];
 
 // Recent donations
-$recentDonations = $db->query("SELECT d.*, u.full_name receiver FROM donations d LEFT JOIN users u ON u.id=d.received_by ORDER BY d.created_at DESC LIMIT 5")->fetch_all(MYSQLI_ASSOC);
+$recentDonations = $db->query("SELECT d.*, u.full_name receiver FROM donations d LEFT JOIN users u ON u.id=d.received_by WHERE d.is_archived=0 ORDER BY d.created_at DESC LIMIT 5")->fetch_all(MYSQLI_ASSOC);
 
 // Recent children
-$recentChildren = $db->query("SELECT * FROM children ORDER BY created_at DESC LIMIT 5")->fetch_all(MYSQLI_ASSOC);
+$recentChildren = $db->query("SELECT * FROM children WHERE is_archived=0 ORDER BY created_at DESC LIMIT 5")->fetch_all(MYSQLI_ASSOC);
 
 $pageTitle = 'Dashboard';
 include '../includes/header.php';

@@ -9,11 +9,11 @@ requireRole('staff');
 $db  = getDB();
 $uid = (int)$_SESSION['user_id'];
 
-$activeChildren  = $db->query("SELECT COUNT(*) c FROM children WHERE case_status='Active'")->fetch_assoc()['c'];
-$myDonations     = $db->query("SELECT COUNT(*) c FROM donations WHERE received_by=$uid")->fetch_assoc()['c'];
-$pendingCases    = $db->query("SELECT COUNT(*) c FROM children WHERE case_status='Active'")->fetch_assoc()['c'];
-$recentChildren  = $db->query("SELECT * FROM children ORDER BY created_at DESC LIMIT 6")->fetch_all(MYSQLI_ASSOC);
-$recentDonations = $db->query("SELECT * FROM donations WHERE received_by=$uid ORDER BY donation_date DESC LIMIT 5")->fetch_all(MYSQLI_ASSOC);
+$activeChildren  = $db->query("SELECT COUNT(*) c FROM children WHERE is_archived=0 AND case_status='Active'")->fetch_assoc()['c'];
+$myDonations     = $db->query("SELECT COUNT(*) c FROM donations WHERE is_archived=0 AND received_by=$uid")->fetch_assoc()['c'];
+$pendingCases    = $db->query("SELECT COUNT(*) c FROM children WHERE is_archived=0 AND case_status='Active'")->fetch_assoc()['c'];
+$recentChildren  = $db->query("SELECT * FROM children WHERE is_archived=0 ORDER BY created_at DESC LIMIT 6")->fetch_all(MYSQLI_ASSOC);
+$recentDonations = $db->query("SELECT * FROM donations WHERE is_archived=0 AND received_by=$uid ORDER BY donation_date DESC LIMIT 5")->fetch_all(MYSQLI_ASSOC);
 
 $pageTitle = 'Staff Dashboard';
 include '../includes/header.php';
