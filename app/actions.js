@@ -115,6 +115,27 @@ export async function saveEntity(slug, id, prev, formData) {
   redirect(flash(base, `${entity.singular} ${creating ? 'added' : 'updated'} successfully.`));
 }
 
+const ARCHIVABLE = ['children', 'resources', 'donations'];
+
+export async function setArchived(slug, id, archived) {
+  const user = await getSession();
+  if (!user) redirect('/');
+  const entity = getEntity(slug);
+  if (!entity || !ARCHIVABLE.includes(slug)) redirect('/');
+  const isAdmin = user.role === 'admin';
+  // Staff: children, and only the donations they received.
+  if (!isAdmin && !['children', 'donations'].includes(slug)) redirect('/?error=unauthorized');
+  const base = `/${user.role}/${slug === 'donations' && !isAdmin ? 'donations' : slug}`;
+  const back = archived ? base : `${base}?view=archived`;
+
+  let q = db().from(entity.table).update({ is_archived: archived }).eq('id', id);
+  if (!isAdmin && slug === 'donations') q = q.eq('received_by', user.id);
+  const { error } = await q;
+  if (error) redirect(flash(back, error.message, 'danger'));
+  await logActivity(user, `${archived ? 'Archived' : 'Restored'} ${entity.singular} ID ${id}`, entity.title);
+  redirect(flash(back, `${entity.singular} ${archived ? 'archived' : 'restored'} successfully.`));
+}
+
 export async function deleteEntity(slug, id) {
   const user = await requireRole('admin');
   const entity = getEntity(slug);

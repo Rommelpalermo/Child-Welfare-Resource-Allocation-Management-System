@@ -8,10 +8,10 @@ export default async function StaffDashboard() {
   const user = await requireRole('staff');
 
   const [{ count: active }, { count: mine }, recentChildren, recentDonations] = await Promise.all([
-    db().from('children').select('*', { count: 'exact', head: true }).eq('case_status', 'Active'),
-    db().from('donations').select('*', { count: 'exact', head: true }).eq('received_by', user.id),
-    must(db().from('children').select('*').order('created_at', { ascending: false }).limit(6)),
-    must(db().from('donations').select('*').eq('received_by', user.id).order('donation_date', { ascending: false }).limit(5)),
+    db().from('children').select('*', { count: 'exact', head: true }).eq('is_archived', false).eq('case_status', 'Active'),
+    db().from('donations').select('*', { count: 'exact', head: true }).eq('is_archived', false).eq('received_by', user.id),
+    must(db().from('children').select('*').eq('is_archived', false).order('created_at', { ascending: false }).limit(6)),
+    must(db().from('donations').select('*').eq('is_archived', false).eq('received_by', user.id).order('donation_date', { ascending: false }).limit(5)),
   ]);
 
   return (

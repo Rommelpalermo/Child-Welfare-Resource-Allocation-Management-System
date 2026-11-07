@@ -17,14 +17,14 @@ export default async function AdminDashboard() {
   const monthStart = new Date(Date.UTC(today.getFullYear(), today.getMonth(), 1)).toISOString().slice(0, 10);
 
   const [children, resources, partners, pending, monthRows, donorRows, recentDonations, recentChildren] = await Promise.all([
-    count('children', (q) => q.eq('case_status', 'Active')),
-    count('resources'),
+    count('children', (q) => q.eq('is_archived', false).eq('case_status', 'Active')),
+    count('resources', (q) => q.eq('is_archived', false)),
     count('partners', (q) => q.eq('status', 'Active')),
-    count('donations', (q) => q.eq('status', 'Pending')),
-    must(db().from('donations').select('amount').gte('donation_date', monthStart)),
-    must(db().from('donations').select('donor_name')),
-    must(db().from('donations').select('*, receiver:users!received_by(full_name)').order('created_at', { ascending: false }).limit(5)),
-    must(db().from('children').select('*').order('created_at', { ascending: false }).limit(5)),
+    count('donations', (q) => q.eq('is_archived', false).eq('status', 'Pending')),
+    must(db().from('donations').select('amount').eq('is_archived', false).gte('donation_date', monthStart)),
+    must(db().from('donations').select('donor_name').eq('is_archived', false)),
+    must(db().from('donations').select('*, receiver:users!received_by(full_name)').eq('is_archived', false).order('created_at', { ascending: false }).limit(5)),
+    must(db().from('children').select('*').eq('is_archived', false).order('created_at', { ascending: false }).limit(5)),
   ]);
   const monthTotal = monthRows.reduce((s, r) => s + Number(r.amount || 0), 0);
   const donors = new Set(donorRows.map((r) => r.donor_name)).size;

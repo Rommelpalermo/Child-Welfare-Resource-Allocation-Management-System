@@ -44,6 +44,7 @@ create table children (
   case_status      text default 'Active' check (case_status in ('Active','Closed','Referred','Reunified')),
   notes            text,
   photo            varchar(255),
+  is_archived      boolean not null default false,
   created_by       bigint references users(id) on delete set null,
   created_at       timestamptz default now(),
   updated_at       timestamptz default now()
@@ -84,6 +85,7 @@ create table resources (
   location         varchar(150),
   acquired_date    date,
   notes            text,
+  is_archived      boolean not null default false,
   created_at       timestamptz default now(),
   updated_at       timestamptz default now()
 );
@@ -115,6 +117,7 @@ create table donations (
   status             text default 'Received' check (status in ('Received','Pending','Acknowledged')),
   acknowledgement_no varchar(100),
   notes              text,
+  is_archived      boolean not null default false,
   created_at         timestamptz default now(),
   updated_at         timestamptz default now()
 );

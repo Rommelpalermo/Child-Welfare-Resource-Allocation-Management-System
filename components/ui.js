@@ -34,6 +34,15 @@ export function PageHeader({ icon, title, crumbs = [], right }) {
   );
 }
 
+export function ArchiveToggle({ base, archived }) {
+  return (
+    <div className="btn-group mb-3" role="group">
+      <Link href={base} className={`btn btn-sm ${archived ? 'btn-outline-success' : 'btn-success'}`}><i className="bi bi-list-ul me-1"></i>Active</Link>
+      <Link href={`${base}?view=archived`} className={`btn btn-sm ${archived ? 'btn-secondary' : 'btn-outline-secondary'}`}><i className="bi bi-archive me-1"></i>Archived</Link>
+    </div>
+  );
+}
+
 export function Badge({ value }) {
   if (!value) return '—';
   return <span className={`badge bg-${badgeClass(value)}`}>{value}</span>;

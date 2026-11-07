@@ -8,7 +8,7 @@ import FilterTable from '@/components/FilterTable';
 export default async function CasesList({ searchParams }) {
   await requireRole('staff');
   const sp = await searchParams;
-  const rows = await must(db().from('children').select('*').order('case_status').order('last_name'));
+  const rows = await must(db().from('children').select('*').eq('is_archived', false).order('case_status').order('last_name'));
   return (
     <div className="container-fluid px-4 py-3">
       <Flash sp={sp} />
