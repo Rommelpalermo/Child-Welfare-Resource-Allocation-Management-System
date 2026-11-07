@@ -13,7 +13,7 @@ $uid = (int)$_SESSION['user_id'];
 $donations = $db->query("SELECT d.*, p.org_name partner_name
     FROM donations d
     LEFT JOIN partners p ON p.id=d.partner_id
-    WHERE d.received_by=$uid
+    WHERE d.received_by=$uid AND d.is_archived=0
     ORDER BY d.donation_date DESC")->fetch_all(MYSQLI_ASSOC);
 
 $pageTitle = 'My Donations';

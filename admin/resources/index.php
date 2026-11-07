@@ -16,7 +16,24 @@ if (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
     header('Location: index.php'); exit;
 }
 
-$resources = $db->query("SELECT * FROM resources ORDER BY created_at DESC")->fetch_all(MYSQLI_ASSOC);
+if (isset($_GET['archive']) && is_numeric($_GET['archive'])) {
+    $id = (int)$_GET['archive'];
+    $db->query("UPDATE resources SET is_archived=1 WHERE id=$id");
+    setFlash('success', 'Resource item archived.');
+    logActivity("Archived resource ID $id", 'Resources');
+    header('Location: index.php'); exit;
+}
+if (isset($_GET['restore']) && is_numeric($_GET['restore'])) {
+    $id = (int)$_GET['restore'];
+    $db->query("UPDATE resources SET is_archived=0 WHERE id=$id");
+    setFlash('success', 'Resource item restored.');
+    logActivity("Restored resource ID $id", 'Resources');
+    header('Location: index.php?view=archived'); exit;
+}
+
+$showArchived = (isset($_GET['view']) ? $_GET['view'] : '') === 'archived';
+$arch = $showArchived ? 1 : 0;
+$resources = $db->query("SELECT * FROM resources WHERE is_archived=$arch ORDER BY created_at DESC")->fetch_all(MYSQLI_ASSOC);
 $pageTitle = 'Resource & Inventory';
 include '../../includes/header.php';
 ?>
@@ -35,8 +52,9 @@ include '../../includes/header.php';
         <a href="add.php" class="btn btn-success"><i class="bi bi-plus-lg me-1"></i>Add Item</a>
     </div>
 
+    <?php include '../../includes/archive_toggle.php'; ?>
     <div class="card">
-        <div class="card-header"><i class="bi bi-box-seam me-2"></i>Inventory List</div>
+        <div class="card-header"><i class="bi bi-box-seam me-2"></i><?= $showArchived ? 'Archived Items' : 'Inventory List' ?></div>
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table datatable table-hover">
@@ -57,7 +75,14 @@ include '../../includes/header.php';
                         <td><?= e((isset($r['location']) ? $r['location'] : '—')) ?></td>
                         <td><?= fmtDate($r['acquired_date']) ?></td>
                         <td class="text-nowrap">
+                            <?php if ($showArchived): ?>
+                            <a href="?restore=<?= $r['id'] ?>" class="btn btn-sm btn-outline-success" title="Restore"
+                               data-confirm="Restore this resource item?"><i class="bi bi-arrow-counterclockwise"></i></a>
+                            <?php else: ?>
                             <a href="edit.php?id=<?= $r['id'] ?>" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
+                            <a href="?archive=<?= $r['id'] ?>" class="btn btn-sm btn-outline-secondary" title="Archive"
+                               data-confirm="Archive this resource item?"><i class="bi bi-archive"></i></a>
+                            <?php endif; ?>
                             <a href="?delete=<?= $r['id'] ?>" class="btn btn-sm btn-outline-danger"
                                data-confirm="Delete this resource item?"><i class="bi bi-trash"></i></a>
                         </td>

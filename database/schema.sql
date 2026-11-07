@@ -49,6 +49,7 @@ CREATE TABLE children (
     notes           TEXT,
     photo           VARCHAR(255),
     created_by      INT,
+    is_archived     TINYINT(1) NOT NULL DEFAULT 0,
     created_at      DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at      DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL
@@ -100,7 +101,8 @@ CREATE TABLE resources (
     location        VARCHAR(150),
     acquired_date   DATE,
     notes           TEXT,
-    created_at      DATETIME DEFAULT CURRENT_TIMESTAMP,
+    is_archived     TINYINT(1) NOT NULL DEFAULT 0,
+    created_at       DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at      DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
@@ -140,7 +142,8 @@ CREATE TABLE donations (
     status          ENUM('Received','Pending','Acknowledged') DEFAULT 'Received',
     acknowledgement_no VARCHAR(100),
     notes           TEXT,
-    created_at      DATETIME DEFAULT CURRENT_TIMESTAMP,
+    is_archived     TINYINT(1) NOT NULL DEFAULT 0,
+    created_at       DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at      DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (partner_id)   REFERENCES partners(id) ON DELETE SET NULL,
     FOREIGN KEY (received_by)  REFERENCES users(id)    ON DELETE SET NULL

@@ -21,6 +21,12 @@ function getDB() {
                  <p>Please ensure MySQL is running and the database <em>' . DB_NAME . '</em> exists.</p></div>');
         }
         $conn->set_charset('utf8mb4');
+        foreach (['children', 'resources', 'donations'] as $t) {
+            $r = $conn->query("SHOW COLUMNS FROM `$t` LIKE 'is_archived'");
+            if ($r && $r->num_rows === 0) {
+                $conn->query("ALTER TABLE `$t` ADD COLUMN is_archived TINYINT(1) NOT NULL DEFAULT 0");
+            }
+        }
     }
     return $conn;
 }
