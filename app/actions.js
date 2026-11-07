@@ -48,8 +48,8 @@ export async function saveEntity(slug, id, prev, formData) {
   const entity = getEntity(slug);
   if (!entity) redirect('/');
   const isAdmin = user.role === 'admin';
-  // Staff may only record new donations.
-  if (!isAdmin && !(slug === 'donations' && !id)) redirect('/?error=unauthorized');
+  // Staff may only record new donations and new child records.
+  if (!isAdmin && !((slug === 'donations' || slug === 'children') && !id)) redirect('/?error=unauthorized');
 
   const creating = !id;
   const base = `/${user.role}/${slug}`;

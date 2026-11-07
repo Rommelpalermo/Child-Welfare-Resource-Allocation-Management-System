@@ -5,13 +5,16 @@ import { entities } from '@/lib/entities';
 import { Cell, Flash, PageHeader } from '@/components/ui';
 import FilterTable from '@/components/FilterTable';
 
-export default async function StaffChildren() {
+export default async function StaffChildren({ searchParams }) {
   await requireRole('staff');
+  const sp = await searchParams;
   const e = entities.children;
   const rows = await must(db().from('children').select('*').order('case_status').order('last_name'));
   return (
     <div className="container-fluid px-4 py-3">
-      <PageHeader icon="person-heart" title="Child Records" crumbs={[{ label: 'Dashboard', href: '/staff/dashboard' }, { label: 'Child Records' }]} />
+      <Flash sp={sp} />
+      <PageHeader icon="person-heart" title="Child Records" crumbs={[{ label: 'Dashboard', href: '/staff/dashboard' }, { label: 'Child Records' }]}
+        right={<Link href="/staff/children/new" className="btn btn-success"><i className="bi bi-plus-lg me-1"></i>Add Child Record</Link>} />
       <div className="card"><div className="card-body">
         <FilterTable>
           <thead><tr><th>#</th>{e.columns.map((c) => <th key={c.label}>{c.label}</th>)}<th>Action</th></tr></thead>
