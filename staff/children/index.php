@@ -39,6 +39,7 @@ include '../../includes/header.php';
                 <li class="breadcrumb-item active">Children</li>
             </ol></nav>
         </div>
+        <a href="add.php" class="btn btn-success"><i class="bi bi-plus-lg me-1"></i>Add Child Record</a>
     </div>
 
     <?php include '../../includes/archive_toggle.php'; ?>
